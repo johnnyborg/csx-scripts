@@ -13,20 +13,33 @@ List<string> DirSearch(string directory)
     return directories;
 }
 
-var librariesPath = @"D:\Source\FCng";
-var directories = DirSearch(librariesPath)
-    .Where(dir => dir.EndsWith("bin") || dir.EndsWith("obj") || dir.EndsWith(".vs"))
-    .ToList();
-
-foreach (var dir in directories)
+int DirectoryDelete(string directory)
 {
-    try
+    int count = 0;
+
+    var directories = DirSearch(directory)
+        .Where(dir => dir.EndsWith("bin") || dir.EndsWith("obj") || dir.EndsWith(".vs"))
+        .ToList();
+
+    foreach (var dir in directories)
     {
-        Directory.Delete(dir, recursive: true);
-        Console.WriteLine($"Deleted: {dir}");
+        count++;
+
+        try
+        {
+            Directory.Delete(dir, recursive: true);
+            Console.WriteLine($"Deleted: {dir}");
+        }
+        catch
+        {
+            Console.WriteLine($"Deleting failed: {dir}");
+        }
     }
-    catch
-    {
-        Console.WriteLine($"Deleting failed: {dir}");
-    }
+
+    return count;
 }
+
+int result = 0;
+do {
+    result = DirectoryDelete(@"D:\Source\FCng"); 
+} while (result == 0);
